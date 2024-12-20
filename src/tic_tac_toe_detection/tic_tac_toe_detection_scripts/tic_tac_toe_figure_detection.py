@@ -391,6 +391,9 @@ def process_live_video(video_path, model_path, show_image=False, user=X, hardcod
 
             if game_over:
                 winner = ttt.winner(board)
+                # notify robot when the game is over
+                node.publish_move("game_over")
+
                 if winner is None:
                     title = f"Game Over: Tie."
                 else:
@@ -458,8 +461,6 @@ def main(args=None):
     node = RobotMovePublisher()
 
     process_live_video(0, MODEL_PATH, user=X, node=node)
-    # this is the change in branch main
-    print("I have added this change in the branch 'play as x'")
 
     rclpy.spin(node)
     rclpy.shutdown()

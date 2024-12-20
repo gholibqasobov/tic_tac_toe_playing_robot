@@ -95,13 +95,17 @@ def target_move(device=None, figure='O', height=-10):
     """
     pose = device.get_pose()
     position = pose.position
-    device.move_to(200, 0, 0, 0)
+    # device.move_to(185, 54, position.z, position.r)
+    # device.move_to(130, 0, 0, 0)
     # print(f"Current position: {position}")
 
     # Move to hardcoded target (modify if needed)
     # print("Moving to target position...")
     # device.move_to(192, 64, 0, position.r)
     print(position)
+    # device.suck(
+    #     False
+    # )
     print("Closing connection.")
     device.close()
 

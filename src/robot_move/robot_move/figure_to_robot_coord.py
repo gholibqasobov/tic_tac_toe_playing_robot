@@ -19,15 +19,15 @@ BOARD_CELL_COORDS = [(303.5, 54.2), (306.5, -4), (310.5, -62),
                     ]
 ROBOT_Z_COORD = 50
 
-FIGURE_COORDS = {'X': (185, 54.2), 'O': (190.82, 131.23)}
+FIGURE_COORDS = {'X': (260, 131.23), 'O': (190.82, 131.23)}
 
 for i in range(len(CELLS_COORDS)):
     cell = CELLS_COORDS[i]
     midpoint = ((cell['x0'] + cell['x1'])/2, (cell['y0'] + cell['y1'])/2)
     ROBOT_TARGET_COORDS[(str(midpoint))] = BOARD_CELL_COORDS[i]
 
-# for key, value in ROBOT_TARGET_COORDS.items():
-#     print(key, '->', value)
+for key, value in ROBOT_TARGET_COORDS.items():
+    print(key, '->', value)
 
 
 # for key, value in FIGURE_COORDS.items():
