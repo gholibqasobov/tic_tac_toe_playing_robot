@@ -458,6 +458,7 @@ def main(args=None):
     node = RobotMovePublisher()
 
     process_live_video(0, MODEL_PATH, user=X, node=node)
+    # this is the change in branch main
 
     rclpy.spin(node)
     rclpy.shutdown()
