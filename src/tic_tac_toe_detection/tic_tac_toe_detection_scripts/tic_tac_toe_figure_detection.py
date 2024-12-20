@@ -459,6 +459,7 @@ def main(args=None):
 
     process_live_video(0, MODEL_PATH, user=X, node=node)
     # this is the change in branch main
+    print("I have added this change in the branch 'play as x'")
 
     rclpy.spin(node)
     rclpy.shutdown()
