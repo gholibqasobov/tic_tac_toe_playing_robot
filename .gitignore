@@ -1,0 +1,35 @@
+# Ignore build, install, and log directories (auto-generated)
+build/
+install/
+log/
+
+# Ignore hidden files related to system and development
+.DS_Store
+*.swp
+*.swo
+
+# Ignore compiled Python files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore CMake build artifacts
+CMakeLists.txt.user
+CMakeCache.txt
+cmake_install.cmake
+CMakeFiles/
+
+# Ignore ROS2-specific auto-generated files
+.colcon/
+.colcon_cache/
+tic_tac_toe_playing_robot/.colcon/
+tic_tac_toe_playing_robot/.colcon_cache/
+
+# Ignore VSCode settings (if using VSCode)
+.vscode/
+
+
+# Ignore dependencies installed via `rosdep`
+tic_tac_toe_playing_robot/deps/
+

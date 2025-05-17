@@ -2,11 +2,11 @@ import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
 
-from robot_move.figure_to_robot_coord import ROBOT_TARGET_COORDS, ROBOT_Z_COORD, FIGURE_COORDS, HOME_POSE
+from robot_move.figure_to_robot_coord import ROBOT_TARGET_COORDS, ROBOT_Z_COORD, FIGURE_COORDS, HOME_POSE, BOARD_CELL_COORDS
 from pydobot import Dobot
 import os
 import subprocess
-
+from time import sleep
 
 
 """
@@ -25,7 +25,13 @@ should we create a funciton to start the robot?
 sounds good idea
 """
 
+FIGURE_CELLS = {'O': [], 'X': []}
 
+# add remaining figures to opponent list
+def add_opponent_figure_cells(FIGURE_CELLS=FIGURE_CELLS, computer_figure='O', human_figure='X'):
+    for key, value in ROBOT_TARGET_COORDS.items():
+        if value not in FIGURE_CELLS[computer_figure]:
+            FIGURE_CELLS[human_figure].append(value)
 
 
 def connect_robot(port='/dev/ttyUSB0'):
@@ -59,7 +65,7 @@ def connect_robot(port='/dev/ttyUSB0'):
         raise Exception(f"Failed to connect to Dobot: {e}")
 
 
-def target_move(device=None, figure='O', cell=None, home_cell=(130, 0, 0),target_height=-10, figure_height=-40, figure_height_offset=20):
+def target_move(device=None, figure='O', cell=None, home_cell=(130, 0, 0),target_height=-40, figure_height=-40, figure_height_offset=20):
     pose = device.get_pose()
     position = pose.position
 
@@ -68,6 +74,10 @@ def target_move(device=None, figure='O', cell=None, home_cell=(130, 0, 0),target
     x_target, y_target = ROBOT_TARGET_COORDS[cell]
 
     x_home, y_home, z_home = home_cell
+
+    # save board coords of corresponding figure (for sorting after game is over)
+    FIGURE_CELLS[figure].append((x_target, y_target))
+    
 
     # Picking and Placing Figure to Target
     device.move_to(x_figure, y_figure, figure_height + figure_height_offset, position.r)
@@ -80,6 +90,74 @@ def target_move(device=None, figure='O', cell=None, home_cell=(130, 0, 0),target
     device.move_to(x_home, y_home, z_home, position.r)
     
 
+# def sort_figures(figure, figure_cells, figure_height=-50, figure_height_offset=10, device=None, home_cell=(130, 0, 0)):
+#     pose = device.get_pose()
+#     position = pose.position
+
+#     x_figure_home, y_figure_home = FIGURE_COORDS[figure]
+#     x_home, y_home, z_home = home_cell
+
+#     for figure_cell in figure_cells:
+#         # Pick and Place Figure to Home position
+
+#         # approach the cell
+#         x_figure, y_figure = figure_cell
+#         device.move_to(x_figure, y_figure, figure_height + figure_height_offset, position.r)
+#         device.move_to(x_figure, y_figure, figure_height, position.r)
+#         # grab the figure
+#         device.suck(True)
+#         device.move_to(x_figure, y_figure, figure_height + figure_height_offset, position.r)
+#         device.move_to(x_figure_home, y_figure_home, figure_height + figure_height_offset+10, position.r)
+#         device.move_to(x_figure_home, y_figure_home, figure_height, position.r)
+#         device.suck(False)
+#         # move home
+#         device.move_to(x_home, y_home, z_home, position.r)
+#         sleep(0.3)
+
+def sort_figures(figure, figure_cells, figure_height=-50, figure_height_offset=10, device=None, home_cell=(130, 0, 0)):
+    if device is None or not figure_cells:
+        raise ValueError("Device and figure_cells must not be None or empty.")
+
+    if figure not in FIGURE_COORDS:
+        raise ValueError("Invalid figure. Ensure it exists in FIGURE_COORDS.")
+
+    pose = device.get_pose()
+    position = pose.position
+
+    x_figure_home, y_figure_home = FIGURE_COORDS[figure]
+    x_home, y_home, z_home = home_cell
+
+    additional_offset = 10
+    i = 0
+    for figure_cell in figure_cells:
+        x_figure, y_figure = figure_cell
+
+        # Approach the cell
+        print("Moving cell", x_figure, y_figure)
+        device.move_to(x_figure, y_figure, figure_height + figure_height_offset, position.r)
+        device.move_to(x_figure, y_figure, figure_height, position.r)
+
+        # Grab the figure
+        device.suck(True)
+        device.move_to(x_figure, y_figure, figure_height + figure_height_offset, position.r)
+
+        # Move to the figure home
+        device.move_to(x_figure_home, y_figure_home, figure_height + figure_height_offset + additional_offset, position.r)
+        device.move_to(x_figure_home, y_figure_home, figure_height + i*5, position.r)
+
+        # Release the figure
+        device.suck(False)
+
+        # Move home
+        device.move_to(x_home, y_home, z_home, position.r)
+        i += 1
+
+        sleep(1)  # Ensure this delay is required for hardware stability
+
+
+        
+
+        
 
 class RobotTargetPositionSubscriber(Node):
 
@@ -88,7 +166,8 @@ class RobotTargetPositionSubscriber(Node):
         self.get_logger().info("Robot Target Move Position Subscriber Initialized")
 
         self.robot_device = None
-        self.figure_height = -47
+        self.figure_height = -50
+        self.busy = False  # Flag to indicate if the robot is busy
 
         try:
             self.robot_device = connect_robot()
@@ -103,26 +182,50 @@ class RobotTargetPositionSubscriber(Node):
         self.subscription  # prevent unused variable warning
 
     def listener_callback(self, msg):
+        # Check if the robot is already busy
+        if self.busy:
+            self.get_logger().warn("Robot is busy. Ignoring new command.")
+            return
+
+        self.busy = True  # Set the busy flag
         self.get_logger().info('I heard: "%s"' % msg.data)
 
         try:
-            cell = msg.data
-
-            self.get_logger().info(f"Moving robot to place figure")
-            target_move(
-                self.robot_device, 
-                'O', 
-                cell, 
-                home_cell=HOME_POSE, 
-                target_height=-15, 
-                figure_height=self.figure_height, 
-                figure_height_offset=15)
-            
-            self.get_logger().info(f"Move complete")
-            self.figure_height -= 5
+            if msg.data == 'game_over':
+                self.handle_game_over()
+            else:
+                self.move_robot_to_target(msg.data)
         except Exception as e:
-            self.get_logger().error(f"Failed to execute move: {e}")
-    
+            self.get_logger().error(f"Error processing command: {e}")
+        finally:
+            self.busy = False  # Reset the busy flag after processing
+
+    def handle_game_over(self):
+        self.get_logger().info("Adding opponent figure cells")
+        add_opponent_figure_cells(FIGURE_CELLS, computer_figure='O', human_figure='X')
+        sleep(6)
+
+        self.get_logger().info("Collecting O figures")
+        sort_figures('O', FIGURE_CELLS['O'], figure_height=-55, figure_height_offset=10, device=self.robot_device, home_cell=(130, 0, 0))
+        sleep(15)
+
+        self.get_logger().info("Collecting X figures")
+        sort_figures('X', FIGURE_CELLS['X'], figure_height=-55, figure_height_offset=10, device=self.robot_device, home_cell=(130, 0, 0))
+
+    def move_robot_to_target(self, cell):
+        self.get_logger().info(f"Moving robot to place figure at cell: {cell}")
+        target_move(
+            self.robot_device,
+            'O',
+            cell,
+            home_cell=HOME_POSE,
+            target_height=-45,
+            figure_height=self.figure_height,
+            figure_height_offset=25
+        )
+        self.figure_height -= 5
+        self.get_logger().info(f"Move complete. Figure height adjusted to {self.figure_height}")
+
     def destroy_node(self):
         if self.robot_device:
             self.robot_device.close()
