@@ -1,0 +1,3 @@
+[console_scripts]
+robot_move_subscriber = robot_move_scripts.robot_target_move:main
+

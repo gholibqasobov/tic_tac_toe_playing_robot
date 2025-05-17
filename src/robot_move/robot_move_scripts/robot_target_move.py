@@ -166,7 +166,7 @@ class RobotTargetPositionSubscriber(Node):
         self.get_logger().info("Robot Target Move Position Subscriber Initialized")
 
         self.robot_device = None
-        self.figure_height = -49
+        self.figure_height = -50
         self.busy = False  # Flag to indicate if the robot is busy
 
         try:

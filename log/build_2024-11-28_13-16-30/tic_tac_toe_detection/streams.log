@@ -1,0 +1,17 @@
+[0.709s] Invoking command in '/home/qasob/tic_tac_toe_playing_robot/build/tic_tac_toe_detection': PYTHONPATH=/home/qasob/tic_tac_toe_playing_robot/build/tic_tac_toe_detection/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/qasob/tic_tac_toe_playing_robot/install/tic_tac_toe_detection/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated setup.py develop --editable --build-directory /home/qasob/tic_tac_toe_playing_robot/build/tic_tac_toe_detection/build --no-deps symlink_data
+[0.920s] running develop
+[1.063s] running egg_info
+[1.063s] writing tic_tac_toe_detection.egg-info/PKG-INFO
+[1.063s] writing dependency_links to tic_tac_toe_detection.egg-info/dependency_links.txt
+[1.063s] writing entry points to tic_tac_toe_detection.egg-info/entry_points.txt
+[1.064s] writing requirements to tic_tac_toe_detection.egg-info/requires.txt
+[1.064s] writing top-level names to tic_tac_toe_detection.egg-info/top_level.txt
+[1.064s] reading manifest file 'tic_tac_toe_detection.egg-info/SOURCES.txt'
+[1.065s] writing manifest file 'tic_tac_toe_detection.egg-info/SOURCES.txt'
+[1.066s] running build_ext
+[1.066s] Creating /home/qasob/tic_tac_toe_playing_robot/install/tic_tac_toe_detection/lib/python3.10/site-packages/tic-tac-toe-detection.egg-link (link to .)
+[1.066s] Installing robot_move_publisher script to /home/qasob/tic_tac_toe_playing_robot/install/tic_tac_toe_detection/lib/tic_tac_toe_detection
+[1.067s] 
+[1.067s] Installed /home/qasob/tic_tac_toe_playing_robot/build/tic_tac_toe_detection
+[1.067s] running symlink_data
+[1.096s] Invoked command in '/home/qasob/tic_tac_toe_playing_robot/build/tic_tac_toe_detection' returned '0': PYTHONPATH=/home/qasob/tic_tac_toe_playing_robot/build/tic_tac_toe_detection/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/qasob/tic_tac_toe_playing_robot/install/tic_tac_toe_detection/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated setup.py develop --editable --build-directory /home/qasob/tic_tac_toe_playing_robot/build/tic_tac_toe_detection/build --no-deps symlink_data
