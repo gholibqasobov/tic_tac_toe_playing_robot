@@ -1,9 +1,0 @@
-[0.487s] Invoking command in '/home/qasob/tic_tac_toe_playing_robot/src/robot_move': PYTHONPATH=/home/qasob/tic_tac_toe_playing_robot/build/robot_move/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/qasob/tic_tac_toe_playing_robot/install/robot_move/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated setup.py egg_info --egg-base ../../build/robot_move build --build-base /home/qasob/tic_tac_toe_playing_robot/build/robot_move/build install --record /home/qasob/tic_tac_toe_playing_robot/build/robot_move/install.log --single-version-externally-managed install_data
-[0.682s] running egg_info
-[0.682s] writing ../../build/robot_move/robot_move.egg-info/PKG-INFO
-[0.682s] writing dependency_links to ../../build/robot_move/robot_move.egg-info/dependency_links.txt
-[0.682s] writing entry points to ../../build/robot_move/robot_move.egg-info/entry_points.txt
-[0.682s] writing requirements to ../../build/robot_move/robot_move.egg-info/requires.txt
-[0.682s] writing top-level names to ../../build/robot_move/robot_move.egg-info/top_level.txt
-[0.683s] error: package directory 'robot_move/scripts' does not exist
-[0.695s] Invoked command in '/home/qasob/tic_tac_toe_playing_robot/src/robot_move' returned '1': PYTHONPATH=/home/qasob/tic_tac_toe_playing_robot/build/robot_move/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/qasob/tic_tac_toe_playing_robot/install/robot_move/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated setup.py egg_info --egg-base ../../build/robot_move build --build-base /home/qasob/tic_tac_toe_playing_robot/build/robot_move/build install --record /home/qasob/tic_tac_toe_playing_robot/build/robot_move/install.log --single-version-externally-managed install_data

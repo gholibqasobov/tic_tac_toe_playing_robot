@@ -1,3 +1,0 @@
-[console_scripts]
-robot_move_publisher = tic_tac_toe_detection_scripts.tic_tac_toe_figure_detection:main
-
